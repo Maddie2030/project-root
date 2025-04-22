@@ -24,8 +24,10 @@
         dest: "/tmp"
         remote_src: yes
 
-    - name: Install AWS CLI v2
-      command: "/tmp/aws/install"
+    - name: Install (or update) AWS CLI v2
+      become: true
+      command: "/tmp/aws/install --update"
+
 
     - name: Fetch DB credentials from AWS Secrets Manager
       shell: |
