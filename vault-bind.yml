@@ -1,4 +1,4 @@
-  GNU nano 7.2                                         vault-bind.yml                                                   - name: Inject Secrets into EC2
+- name: Inject Secrets into EC2
   hosts: all
   become: yes
 
