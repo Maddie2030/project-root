@@ -1,0 +1,46 @@
+  GNU nano 7.2                                         vault-bind.yml                                                   - name: Inject Secrets into EC2
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install required system packages on Ubuntu
+      apt:
+        name:
+          - unzip
+          - curl
+          - jq
+        state: present
+        update_cache: true
+
+    - name: Download AWS CLI v2 installer for Ubuntu
+      get_url:
+        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "/tmp/awscliv2.zip"
+        mode: '0644'
+
+    - name: Unzip AWS CLI v2 installer
+      unarchive:
+        src: "/tmp/awscliv2.zip"
+        dest: "/tmp"
+        remote_src: yes
+
+    - name: Install AWS CLI v2
+      command: "/tmp/aws/install"
+
+    - name: Fetch DB credentials from AWS Secrets Manager
+      shell: |
+        aws secretsmanager get-secret-value \
+          --secret-id devops/app/config \
+          --query SecretString \
+          --output text | jq -r '.DB_USERNAME, .DB_PASSWORD'
+      register: secret_output
+
+    - name: Write secrets to environment file
+      copy:
+        dest: "/home/ubuntu/app.env"
+        content: |
+          DB_USERNAME={{ secret_output.stdout_lines[0] }}
+          DB_PASSWORD={{ secret_output.stdout_lines[1] }}
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'

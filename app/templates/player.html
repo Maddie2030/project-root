@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch {{ video_name }}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+    video {
+      width: 80%;
+      max-width: 900px;
+      border: 5px solid white;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Now Playing: {{ video_name }}</h1>
+    <video controls autoplay>
+      <source src="{{ video_path }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <a href="/" class="button">Back to Catalog</a>
+  </main>
+</body>
+</html>
